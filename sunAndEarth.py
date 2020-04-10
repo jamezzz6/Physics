@@ -17,7 +17,7 @@ pos_sun = Vector3(0, 0, 0)
 v0_sun = Vector3(0, 0, 0)
 m_sun = 1.98847e30
 sun = Entity(pos_sun, v0_sun, m_sun, [])
-sun_img = pygame.image.load('sun.png')
+sun_img = pygame.image.load("sun.png")
 ents.append(sun)
 
 # Initialize earth
@@ -28,19 +28,27 @@ earth = Entity(pos_earth, v0_earth, m_earth, [])
 earth_img = pygame.image.load("earth.png")
 ents.append(earth)
 
+# Initialize moon
+pos_moon = pos_earth + Vector3(0, 3.844e8, 0)
+v0_moon  = v0_earth +Vector3(1.023e3,0,0) #This might be the wrong direction, let me fix that visually...
+m_moon =7.35e22
+moon = Entity(pos_moon, v0_moon, m_moon, [])
+moon_img = pygame.image.load("moon.png")
+ents.append(moon)
+
 def update_celestial_objects(Sun,Earth):
     abs_to_rel = 4e11/800
     simulation_display.blit(sun_img, (sun.pos.x/abs_to_rel+400,sun.pos.y/abs_to_rel+400))
     simulation_display.blit(earth_img,(earth.pos.x/abs_to_rel+400,earth.pos.y/abs_to_rel+400))
-
+    simulation_display.blit(moon_img, (moon.pos.x/abs_to_rel+400, earth.pos.y/abs_to_rel+400))
 
 
 ##Add gravity between all entities
-for o1, o2 in itertools.permutations(ents):
-    o1.forces = [Gravity(o2, o1)]
+for o1, o2 in itertools.permutations(ents, 2):
+    o1.forces.append(Gravity(o2, o1))
 
 # Time steps of 1/1000th of a day (in seconds)
-dt = 0.001 * 365 * 24 * 60 * 60
+dt = 0.01 * 24 * 60 * 60
 N_steps = 990
 
 p_log = []
@@ -48,8 +56,8 @@ v_log = []
 
 crashed = False
 ts = [0]
-xs = [earth.pos.x]
-ys = [earth.pos.y] #I'd like better logging capabilities
+xs = [moon.pos.x-earth.pos.x]
+ys = [moon.pos.y-earth.pos.y] #I'd like better logging capabilities
 
 start_time = 0
 while not crashed:
@@ -57,15 +65,16 @@ while not crashed:
         if event.type == pygame.QUIT:
             crashed = True
     for o in ents:
-        o.update(dt)  # update step for every physical entity
-
+        o.compute_update(dt)  # update step for every physical entity
+    for o in ents:
+        o.apply_update()
     simulation_display.fill(white)
     update_celestial_objects(sun, earth)
     ts.append(ts[-1]+dt) # allows for dynamical dt
-    xs.append(earth.pos.x)
-    ys.append(earth.pos.y)
+    xs.append(moon.pos.x-earth.pos.x)
+    ys.append(moon.pos.y-earth.pos.y)
     pygame.display.update()
-    clock.tick(600)
+    clock.tick(6000)
 pygame.quit()
 plt.plot(xs, ys)
 plt.show()
