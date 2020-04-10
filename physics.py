@@ -25,5 +25,4 @@ class Entity:
     def update(self, delta_t):
         self.pos += delta_t*self.velocity
         for f in self.forces:
-            print(f.evaluate())
             self.velocity += f.evaluate()*self.inverse_mass*delta_t
