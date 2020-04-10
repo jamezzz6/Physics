@@ -3,7 +3,6 @@ from vector3 import Vector3
 from physics import Gravity, Entity
 import itertools
 import pygame
-import os
 
 pygame.init()
 pygame.display.set_caption('Earth according to Newton')
@@ -18,7 +17,6 @@ pos_sun = Vector3(0, 0, 0)
 v0_sun = Vector3(0, 0, 0)
 m_sun = 1.98847e30
 sun = Entity(pos_sun, v0_sun, m_sun, [])
-print(os.path)
 sun_img = pygame.image.load('sun.png')
 ents.append(sun)
 
