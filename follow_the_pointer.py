@@ -6,7 +6,7 @@ pygame.display.set_caption('Escape!')
 white = (255, 255, 255)
 display = pygame.display.set_mode((800, 800))
 clock = pygame.time.Clock()
-speed  =0.005
+speed  =0.5
 
 clock = pygame.time.Clock()
 
@@ -29,7 +29,7 @@ while not crashed:
     print(p)
     pv = Vector3(p[0], p[1], 0)
     diff = rel_to_abs*(pv-Vector3(400,400,0))-mouse
-    dm = speed*diff
+    dm = speed/diff.norm()*diff
     mouse += dm
     update_mouse(mouse)
     pygame.display.update()
