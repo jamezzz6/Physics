@@ -1,7 +1,10 @@
+from vector3 import Vector3
 class Force:
     def __init__(self, source, target):
         self.source = source
         self.target = target
+        self.delta_v = Vector3(0, 0, 0)
+        self.delta_pos = Vector3(0, 0, 0)
     def evaluate(self):
         raise NotImplementedError
 
@@ -22,7 +25,13 @@ class Entity:
         self.velocity = velocity
         self.forces = forces
 
-    def update(self, delta_t):
-        self.pos += delta_t*self.velocity
-        for f in self.forces:
-            self.velocity += f.evaluate()*self.inverse_mass*delta_t
+    def compute_update(self, delta_t):
+        self.delta_pos =delta_t*self.velocity
+        deltas = [f.evaluate() for f in self.forces]
+        self.delta_v  = Vector3(0, 0, 0)
+        for d in deltas:
+            self.delta_v += d * self.inverse_mass * delta_t
+
+    def apply_update(self):
+        self.pos += self.delta_pos
+        self.velocity+=self.delta_v
