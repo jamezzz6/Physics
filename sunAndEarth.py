@@ -43,39 +43,26 @@ for o1, o2 in itertools.permutations(ents):
 dt = 0.001 * 365 * 24 * 60 * 60
 N_steps = 990
 
-# Time array
-#ts = [dt * i for i in range(N_steps)]
 p_log = []
 v_log = []
 
 crashed = False
+ts = [0]
+xs = [earth.pos.x]
+ys = [earth.pos.y] #I'd like better logging capabilities
 
-xs = []
-ys = [] #I'd like better logging
-zs = [] #Maybe no logging, depends on where we go
-vxs = []
-vys = []
-vzs = []
-
+start_time = 0
 while not crashed:
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             crashed = True
-
-        print(event)
-
-
     for o in ents:
         o.update(dt)  # update step for every physical entity
     simulation_display.fill(white)
     update_celestial_objects(sun, earth)
+    ts.append(t[-1]+dt) # allows for dynamical dt
     xs.append(earth.pos.x)
     ys.append(earth.pos.y)
-    zs.append(earth.pos.z)
-    vxs.append(earth.velocity.x)
-    vys.append(earth.velocity.y)
-    vzs.append(earth.velocity.z)
     pygame.display.update()
     clock.tick(600)
 pygame.quit()
