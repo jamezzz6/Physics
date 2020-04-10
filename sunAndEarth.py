@@ -58,9 +58,10 @@ while not crashed:
             crashed = True
     for o in ents:
         o.update(dt)  # update step for every physical entity
+
     simulation_display.fill(white)
     update_celestial_objects(sun, earth)
-    ts.append(t[-1]+dt) # allows for dynamical dt
+    ts.append(ts[-1]+dt) # allows for dynamical dt
     xs.append(earth.pos.x)
     ys.append(earth.pos.y)
     pygame.display.update()
