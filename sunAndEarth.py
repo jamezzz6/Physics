@@ -55,11 +55,12 @@ p_log = []
 v_log = []
 
 crashed = False
-ts = [0]
+## Initiate loggers
+start_time = 0
+ts = [start_time]
 xs = [moon.pos.x-earth.pos.x]
 ys = [moon.pos.y-earth.pos.y] #I'd like better logging capabilities
 
-start_time = 0
 while not crashed:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -70,6 +71,7 @@ while not crashed:
         o.apply_update()
     simulation_display.fill(white)
     update_celestial_objects(sun, earth)
+    ## Logging
     ts.append(ts[-1]+dt) # allows for dynamical dt
     xs.append(moon.pos.x-earth.pos.x)
     ys.append(moon.pos.y-earth.pos.y)
